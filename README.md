@@ -40,7 +40,7 @@ net share | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\7.
 
 dir C:\Users | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\8.UsersOnHost.txt" ; 
 
-etsh advfirewall show allprofiles | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\9.WindowsFirewall.txt" ; 
+netsh advfirewall show allprofiles | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\9.WindowsFirewall.txt" ; 
 
 powercfg /A | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\10.SleepMode.txt" ; 
 
