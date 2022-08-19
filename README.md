@@ -10,21 +10,22 @@
 
 \# Next, simply copy the entire blob of text below and paste into the PowerShell window.
 
+```
 New-Item -ItemType directory -Path "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit" ;
 
 Net LocalGroup Administrators | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\1.Local_Admins.txt" ;
 
-Get-ADGroupMember -Identity "Administrators" -Recursive | %{Get-ADUser -Identity $_.distinguishedName} | Select Name, Enabled | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\2.Admins.txt" -append ;
+Get-ADGroupMember -Identity "Administrators" -Recursive | %{Get-ADUser -Identity $\_.distinguishedName} | Select Name, Enabled | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\2.Admins.txt" -append ;
 
 Net Group "Domain Admins" | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\2.Admins.txt" -append ;
 
-Get-ADGroupMember -Identity "Domain Admins" -Recursive | %{Get-ADUser -Identity $_.distinguishedName} | Select Name, Enabled | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\2.Admins.txt" -append ;
+Get-ADGroupMember -Identity "Domain Admins" -Recursive | %{Get-ADUser -Identity $\_.distinguishedName} | Select Name, Enabled | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\2.Admins.txt" -append ;
 
 Net Group "Enterprise Admins" | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\2.Admins.txt" -append ;
 
-Get-ADGroupMember -Identity "Enterprise Admins" -Recursive | %{Get-ADUser -Identity $_.distinguishedName} | Select Name, Enabled | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\2.Admins.txt" -append ;
+Get-ADGroupMember -Identity "Enterprise Admins" -Recursive | %{Get-ADUser -Identity $\_.distinguishedName} | Select Name, Enabled | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\2.Admins.txt" -append ;
 
-Get-ADGroupMember -Identity "Guests" -Recursive | %{Get-ADUser -Identity $_.distinguishedName} | Select Name, Enabled | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\3.Guests.txt" ;
+Get-ADGroupMember -Identity "Guests" -Recursive | %{Get-ADUser -Identity $\_.distinguishedName} | Select Name, Enabled | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\3.Guests.txt" ;
 
 systeminfo | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\4.SysteminfoandUpdates.txt" ;
 
@@ -53,3 +54,4 @@ auditpol.exe /get /category:* | Out-File "$($env:USERPROFILE)\Desktop\\$env:comp
 net accounts | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\14.PasswordPolicySettings.txt" ; 
 
 Get-ADDefaultDomainPasswordPolicy | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\14.PasswordPolicySettings.txt" -append
+```
