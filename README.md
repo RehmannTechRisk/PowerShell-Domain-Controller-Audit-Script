@@ -54,4 +54,6 @@ auditpol.exe /get /category:* | Out-File "$($env:USERPROFILE)\Desktop\\$env:comp
 net accounts | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\14.PasswordPolicySettings.txt" ; 
 
 Get-ADDefaultDomainPasswordPolicy | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\14.PasswordPolicySettings.txt" -append
+
+Get-WinEvent -FilterHashtable @{logname = ‘setup’} | Export-CSV "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\15.Patches.csv"
 ```
