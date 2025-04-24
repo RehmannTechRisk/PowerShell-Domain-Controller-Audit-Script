@@ -1,5 +1,5 @@
 
-$path = "C:\temp\RehmannDCSelection"
+$path = "C:\\temp\\$env:computername"+"DCAudit"
 New-Item -ItemType directory -Path $path
 
 
@@ -46,3 +46,7 @@ net accounts | Out-File "$path\14.PasswordPolicySettings.txt" ;
 Get-ADDefaultDomainPasswordPolicy | Out-File "$path\14.PasswordPolicySettings.txt" -append
 
 Get-WinEvent -FilterHashtable @{logname = ‘setup’} | Export-CSV "$path\15.Patches.csv"
+
+
+$zipPath = "$path.zip"
+Compress-Archive -Path $path -DestinationPath $zipPath
