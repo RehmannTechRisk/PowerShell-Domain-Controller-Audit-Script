@@ -1,5 +1,5 @@
 
-$path = "C:\\temp\\$env:computername"+"DCAudit"
+$path = "C:\\temp\\$env:computername DC Audit"
 New-Item -ItemType directory -Path $path
 
 
