@@ -1,7 +1,5 @@
-
 $path = "C:\\temp\\$env:computername DC Audit"
 New-Item -ItemType directory -Path $path
-
 
 Net LocalGroup Administrators | Out-File "$path\1.Local_Admins.txt" ;
 
@@ -19,7 +17,7 @@ Get-ADGroupMember -Identity "Guests" -Recursive | %{Get-ADUser -Identity $_.dist
 
 systeminfo | Out-File "$path\4.SysteminfoandUpdates.txt" ;
 
-wmic qfe list | Out-File "$path\4.SysteminfoandUpdates.txt" -append ; 
+Get-HotFix | Format-table -property Caption, HotFixID, InstalledOn | Out-File "$path\4.SysteminfoandUpdates.txt" -append ; 
 
 gpresult -h "$path\5.DCFollowedGPOs.html" ; 
 
@@ -46,7 +44,6 @@ net accounts | Out-File "$path\14.PasswordPolicySettings.txt" ;
 Get-ADDefaultDomainPasswordPolicy | Out-File "$path\14.PasswordPolicySettings.txt" -append
 
 Get-WinEvent -FilterHashtable @{logname = ‘setup’} | Export-CSV "$path\15.Patches.csv"
-
 
 $zipPath = "$path.zip"
 Compress-Archive -Path $path -DestinationPath $zipPath
