@@ -11,49 +11,55 @@
 \# Next, simply copy the entire blob of text below and paste into the PowerShell window.
 
 ```
-New-Item -ItemType directory -Path "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit" ;
 
-Net LocalGroup Administrators | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\1.Local_Admins.txt" ;
+$path = "C:\\temp\\$env:computername DC Audit"
+New-Item -ItemType directory -Path $path
 
-Get-ADGroupMember -Identity "Administrators" -Recursive | %{Get-ADUser -Identity $_.distinguishedName} | Select Name, Enabled | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\2.Admins.txt" -append ;
+Net LocalGroup Administrators | Out-File "$path\1.Local_Admins.txt" ;
 
-Net Group "Domain Admins" | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\2.Admins.txt" -append ;
+Get-ADGroupMember -Identity "Administrators" -Recursive | %{Get-ADUser -Identity $_.distinguishedName} | Select Name, Enabled | Out-File "$path\2.Admins.txt" -append ;
 
-Get-ADGroupMember -Identity "Domain Admins" -Recursive | %{Get-ADUser -Identity $_.distinguishedName} | Select Name, Enabled | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\2.Admins.txt" -append ;
+Net Group "Domain Admins" | Out-File "$path\2.Admins.txt" -append ;
 
-Net Group "Enterprise Admins" | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\2.Admins.txt" -append ;
+Get-ADGroupMember -Identity "Domain Admins" -Recursive | %{Get-ADUser -Identity $_.distinguishedName} | Select Name, Enabled | Out-File "$path\2.Admins.txt" -append ;
 
-Get-ADGroupMember -Identity "Enterprise Admins" -Recursive | %{Get-ADUser -Identity $_.distinguishedName} | Select Name, Enabled | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\2.Admins.txt" -append ;
+Net Group "Enterprise Admins" | Out-File "$path\2.Admins.txt" -append ;
 
-Get-ADGroupMember -Identity "Guests" -Recursive | %{Get-ADUser -Identity $_.distinguishedName} | Select Name, Enabled | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\3.Guests.txt" ;
+Get-ADGroupMember -Identity "Enterprise Admins" -Recursive | %{Get-ADUser -Identity $_.distinguishedName} | Select Name, Enabled | Out-File "$path\2.Admins.txt" -append ;
 
-systeminfo | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\4.SysteminfoandUpdates.txt" ;
+Get-ADGroupMember -Identity "Guests" -Recursive | %{Get-ADUser -Identity $_.distinguishedName} | Select Name, Enabled | Out-File "$path\3.Guests.txt" ;
 
-wmic qfe list | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\4.SysteminfoandUpdates.txt" -append ; 
+systeminfo | Out-File "$path\4.SysteminfoandUpdates.txt" ;
 
-gpresult -h "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\5.DCFollowedGPOs.html" ; 
+Get-HotFix | Format-table -property Caption, HotFixID, InstalledOn | Out-File "$path\4.SysteminfoandUpdates.txt" -append ; 
 
-vaultcmd /listschema | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\6.CredentialManager.txt" ; 
+gpresult -h "$path\5.DCFollowedGPOs.html" ; 
 
-vaultcmd /list | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\6.CredentialManager.txt" -append ; 
+vaultcmd /listschema | Out-File "$path\6.CredentialManager.txt" ; 
 
-net share | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\7.Shares.txt" ; 
+vaultcmd /list | Out-File "$path\6.CredentialManager.txt" -append ; 
 
-dir C:\Users | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\8.UsersOnHost.txt" ; 
+net share | Out-File "$path\7.Shares.txt" ; 
 
-netsh advfirewall show allprofiles | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\9.WindowsFirewall.txt" ; 
+dir C:\Users | Out-File "$path\8.UsersOnHost.txt" ; 
 
-powercfg /A | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\10.SleepMode.txt" ; 
+netsh advfirewall show allprofiles | Out-File "$path\9.WindowsFirewall.txt" ; 
 
-ipconfig /all | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\11.BridgedAdapters.txt" ; 
+powercfg /A | Out-File "$path\10.SleepMode.txt" ; 
 
-get-gporeport -all -reporttype HTML -path "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\12.DomainGPOs.html" ; 
+ipconfig /all | Out-File "$path\11.BridgedAdapters.txt" ; 
 
-auditpol.exe /get /category:* | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\13.AuditPolicySettings.txt" ; 
+get-gporeport -all -reporttype HTML -path "$path\12.DomainGPOs.html" ; 
 
-net accounts | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\14.PasswordPolicySettings.txt" ; 
+auditpol.exe /get /category:* | Out-File "$path\13.AuditPolicySettings.txt" ; 
 
-Get-ADDefaultDomainPasswordPolicy | Out-File "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\14.PasswordPolicySettings.txt" -append
+net accounts | Out-File "$path\14.PasswordPolicySettings.txt" ; 
 
-Get-WinEvent -FilterHashtable @{logname = ‘setup’} | Export-CSV "$($env:USERPROFILE)\Desktop\\$env:computername DC Audit\15.Patches.csv"
+Get-ADDefaultDomainPasswordPolicy | Out-File "$path\14.PasswordPolicySettings.txt" -append
+
+Get-WinEvent -FilterHashtable @{logname = ‘setup’} | Export-CSV "$path\15.Patches.csv"
+
+$zipPath = "$path.zip"
+Compress-Archive -Path $path -DestinationPath $zipPath
+
 ```
