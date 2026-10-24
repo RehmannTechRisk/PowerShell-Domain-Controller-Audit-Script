@@ -1,10 +1,10 @@
 \# PowerShell-Domain-Controller-Audit-Script
 
-\# A PowerShell script which can be copied/pasted into a PowerShell console window and retrieve auditable domain controller server configuration settings. This script only runs a series a queries (it does not make any modifications) and then creates a folder on the currently logged in user's desktop nameded after the computer name which can then be zipped and uploaded as supporting documentation.
+\# A PowerShell script which can be copied/pasted into a PowerShell console window and retrieve auditable domain controller server configuration settings. This script only runs a series of queries (it does not make any modifications) and then creates a folder on the currently logged in user's desktop named after the computer name which can then be zipped and uploaded as supporting documentation.
 
 \# PLEASE NOTE:
 
-\# This script needs to be run as a Domain Administrator on each Domain Controller being audited seperately.
+\# This script needs to be run as a Domain Administrator on each Domain Controller being audited separately.
 
 \# Search for: c:\windows\system32\windowspowershell\v1.0\powershell.exe, right click the application result and select "run as administrator".
 
